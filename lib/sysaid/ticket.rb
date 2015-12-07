@@ -154,6 +154,15 @@ class SysAid::Ticket
 
   private
 
+  def self.sql_query(query)
+    builder = Builder::XmlMarkup.new
+
+    builder.sessionId(SysAid.session_id)
+    xml = builder.apiSysObj('xsi:type' => "tns:apiTicket")
+    xml = builder.condition(query)
+    xml
+  end
+
   def to_xml(include_id = true)
     builder = Builder::XmlMarkup.new
 
