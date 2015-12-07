@@ -79,6 +79,18 @@ class SysAid::Ticket
     return ticket
   end
 
+  def self.find_by_query(query)
+    SysAid.ensure_logged_in
+
+    response = SysAid.call(:execute_select_query, message: sql_query(query))
+
+    if response.to_hash[:execute_select_query_response][:return]
+      return response.to_hash[:execute_select_query_response][:return]
+    end
+
+    return false
+  end
+
   # Loads the latest ticket information from the SysAid server
   def refresh
     SysAid.ensure_logged_in
@@ -134,7 +146,7 @@ class SysAid::Ticket
   #   => true
   def delete
     SysAid.ensure_logged_in
-    
+
     SysAid.call(:delete, message: to_xml(false))
 
     reset_all_attributes
